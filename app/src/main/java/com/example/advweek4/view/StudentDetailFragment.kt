@@ -5,14 +5,19 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.advweek4.R
 import com.example.advweek4.model.Student
+import com.example.advweek4.util.loadImage
 import com.example.advweek4.viewmodel.DetailViewModel
 import com.example.advweek4.viewmodel.ListViewModel
 import com.google.android.material.textfield.TextInputLayout
+import com.squareup.picasso.Callback
+import com.squareup.picasso.Picasso
+import java.lang.Exception
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -40,7 +45,11 @@ class StudentDetailFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         viewModel = ViewModelProvider(this)[DetailViewModel::class.java]
-        viewModel.fetch()
+        val playerId = StudentDetailFragmentArgs.fromBundle(requireArguments()).studentId
+        println("Id $playerId")
+        if (playerId != null) {
+            viewModel.fetch(playerId)
+        }
         observeViewModel()
     }
 
@@ -49,12 +58,17 @@ class StudentDetailFragment : Fragment() {
         val txtInputName = view?.findViewById<TextInputLayout>(R.id.txtInputName)
         val txtInputDOB = view?.findViewById<TextInputLayout>(R.id.txtInputDOB)
         val txtInputPhone = view?.findViewById<TextInputLayout>(R.id.txtInputPhone)
+        val imgViewDetail = view?.findViewById<ImageView>(R.id.imageViewDetail)
+        var url: String?
         viewModel.studentLD.observe(viewLifecycleOwner, Observer {
             txtInputID?.editText?.setText(it.id)
             txtInputName?.editText?.setText(it.name)
             txtInputDOB?.editText?.setText(it.dob)
             txtInputPhone?.editText?.setText(it.phone)
+            url = it.photoUrl
+            Picasso.get().load(url).resize(400,400).centerCrop().error(R.drawable.baseline_error_24).into(imgViewDetail)
         })
+
     }
 
 
