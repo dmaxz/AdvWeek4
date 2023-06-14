@@ -43,6 +43,8 @@ class StudentListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         viewModel = ViewModelProvider(this)[ListViewModel::class.java]
         viewModel.refresh()
+
+
         val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerView)
         recyclerView.layoutManager = LinearLayoutManager(context)
         recyclerView.adapter = studentListAdapter
